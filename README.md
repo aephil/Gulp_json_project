@@ -3,6 +3,7 @@
 Phonon website
 ==============
 
+http://henriquemiranda.github.io/phononwebsite/phonon.html#
 Visualize phonon vibrational modes.
 
 This project aims to provide a simple way to visualize the lattice vibrations of different materials. The temperature of a material is related to the agitation of its atoms. The atoms can move in any of the three cartesian directions. Combining the different possible ways the atoms can vibrate we obtain the eigenvectors. Each mode has associated a frequency of vibration that is related with the forces between the atoms.
