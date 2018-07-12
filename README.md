@@ -18,11 +18,12 @@ Gulp
 ----------------
 To read a Quantum Espresso calculation you need three files `<prefix>.gin` and `<prefix>.eig` and `<prefix>.disp`. The first one is the input file for gulp, the second and third one can be generated with `output phon <prefix>`, and `output eig <prefix>` in `<prefix>.gin` file. 
 After installing the python scripts by:
+	
 	$ python setup.py develop
 
 
  you can obtain the `.json` files as:
 
-    $ read_gulp.py prefix
+    	$ read_gulp.py prefix
 
 You can then select the resulting `.json` file with the `Choose files` button.
