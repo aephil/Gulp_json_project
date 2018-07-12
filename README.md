@@ -17,7 +17,7 @@ If you want to see your own calculations done in Gulp, you can use this package.
 
 Gulp
 ----------------
-To read a Quantum Espresso calculation you need three files `<prefix>.gin` and `<prefix>.eig` and `<prefix>.disp`. The first one is the input file for gulp, the second and third one can be generated with `output phon <prefix>`, and `output eig <prefix>` in `<prefix>.gin` file. 
+To read a Gulp calculation you need three files `<prefix>.gin` and `<prefix>.eig` and `<prefix>.disp`. The first one is the input file for gulp, the second and third one can be generated with `output phon <prefix>`, and `output eig <prefix>` in `<prefix>.gin` file. 
 After installing the python scripts by:
 	
 	$ python setup.py develop
