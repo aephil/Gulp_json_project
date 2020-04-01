@@ -1,7 +1,7 @@
 import pandas as pd
 import numpy as np
-import math
-from math import cos, sin
+#import math
+from numpy import cos, sin
 
 
 class gulp_pw():  
@@ -62,7 +62,7 @@ class gulp_pw():
         return np.array([b1,b2,b3])
 
     def deg_rad(self, x):
-        return (x*(math.pi))/180
+        return (x*(np.pi))/180
 
 
     def lat_vec(self, cell_coeff):

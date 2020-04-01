@@ -10,7 +10,7 @@ import numpy as np
 import argparse
 import json
 import math
-from math import cos, sin
+from numpy import cos, sin
 #from phononweb import Phonon
 from .jsonencoder import *
 from .gulp_pw import *
