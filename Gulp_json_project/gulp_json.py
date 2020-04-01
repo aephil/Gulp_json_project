@@ -1,5 +1,5 @@
-
 # coding: utf-8
+
 
 # In[20]:
 
@@ -17,12 +17,10 @@ from .gulp_pw import *
 pw = gulp_pw()
 
 class gulp_json():
-    
-    
     def __init__(self, filename):
         self.features(filename)
         self.write_json(filename)
-    	
+        
     def features(self, filename):
         main = open("%s.eig"%filename)
         main_lines = main.readlines()
@@ -63,37 +61,79 @@ class gulp_json():
 
         #pos, atom_types, chemical_symbols
 
-        inp_txt = open("%s.gin"%filename)
-        inp_lines = inp_txt.readlines()
+        with open(f"{filename}.gin") as inp_txt:
+	        inp_lines = inp_txt.readlines()
+            
         cell_index = 0
+        found = False
+        
         for i in inp_lines:
             key = i.split()
-            if key == ['fractional']:
-                break 
-            cell_index = cell_index +1
-        cell_index = cell_index + 1
-        atom_pos = []
-        for i in range(cell_index, natoms+cell_index):
-                atom_pos.append((inp_lines[i].split()))
-        atom_pos = np.array(atom_pos)
-        atom_types  = atom_pos[:, 0]
-        pos = atom_pos[:, -3:]
-        pos = [[float(i) for i in j] for j in pos]
+            try:
+                if key[0][:4].lower() == 'frac':
+                    found = True
+                    break
+            except:
+                pass
+            cell_index += 1
+
+        if not found:
+            raise Exception("No 'fractional' keyword found in GULP input file.")
+            
+        atom_types = []
+        pos = []
+
+        while len(atom_types) < natoms:
+            cell_index += 1
+            
+            try:
+                # get next line, without comments
+                current_line = inp_lines[cell_index].split('#')[0]
+            except IndexError:
+                raise Exception(f"Only found {len(atom_types)} atoms (out of {natoms} "
+                                "expected) in GULP input file.")
+            
+            # break into 'words'
+            current_line = current_line.split()
+            
+            # format is type, core/shel, positions * 3, other parameters
+            if len(current_line) < 4:
+                continue
+            try:
+                current_pos = [float(f) for f in current_line[1:4]]
+            except ValueError:
+                if current_line[1] == 'core': # ignore shells for phonons
+                    current_pos = [float(f) for f in current_line[2:5]]
+
+            atom_types.append(current_line[0])
+            pos.append(current_pos)
+
+        atom_types = np.array(atom_types)
+        # not sure why this needs to be an array, but for consistency with existing code
+
         chemical_symbols = np.unique(atom_types).tolist()
         pos = np.array(pos)
+        
         self.pos = pos
         self.atom_types = atom_types
         self.chemical_symbols  = chemical_symbols
+    
         
-	
         #cell
 
         cell_index =0
+        found = False
+        
         for i in inp_lines:
             key = i.split()
             if key == ['cell']:
+                found = True
                 break 
             cell_index = cell_index +1
+
+        if not found:
+            raise Exception("No 'cell' keyword found in GULP input file. ('vectors' not yet implemented.)")
+            
         cell_index = cell_index + 1
         cell_coeff = inp_lines[cell_index].split()
         cell_coeff = [float(i) for i in cell_coeff]
@@ -101,7 +141,7 @@ class gulp_json():
         self.cell = cell
 
         # In[4]:
-	self.car = pw.red_car(pos, cell)
+        self.car = pw.red_car(pos, cell)
 
         #getting the eigenvalues in the right format.
 
@@ -124,7 +164,7 @@ class gulp_json():
         # In[5]:
 
 
-        #getting the eigen vectors in the correct format
+        #getting the eigenvectors in the correct format
 
 
         eig_vec_raw = open("%s.eig"%filename)
